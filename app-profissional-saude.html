@@ -267,6 +267,133 @@
             box-shadow: 0 0 0 2px #e0e0e0;
         }
         .empty { text-align: center; padding: 60px 20px; color: #999; }
+
+        /* Media queries para responsividade */
+        @media (max-width: 1024px) {
+            .main-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+
+            .container {
+                border-radius: 10px;
+            }
+
+            .screen {
+                padding: 20px 15px;
+            }
+
+            .header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+
+            .header > div:last-child {
+                align-self: flex-end;
+            }
+
+            .main-grid {
+                padding: 10px;
+                gap: 15px;
+            }
+
+            .column {
+                padding: 15px;
+            }
+
+            .column-title {
+                font-size: 18px;
+            }
+
+            .patient-card {
+                padding: 12px;
+            }
+
+            .patient-name {
+                font-size: 16px;
+            }
+
+            .modal-content {
+                max-width: 100%;
+                margin: 10px;
+            }
+
+            .tabs {
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+            }
+
+            .tab-btn {
+                font-size: 14px;
+                padding: 10px 18px;
+            }
+
+            .modal-body {
+                padding: 20px 15px;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+                gap: 10px;
+            }
+
+            .stat-value {
+                font-size: 28px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .logo h1 {
+                font-size: 24px;
+            }
+
+            .column-title {
+                font-size: 16px;
+            }
+
+            .patient-name {
+                font-size: 15px;
+            }
+
+            .alert-card, .patient-card {
+                font-size: 14px;
+            }
+
+            .modal-header h2 {
+                font-size: 18px;
+            }
+
+            .close-btn {
+                padding: 8px 15px;
+                font-size: 14px;
+            }
+
+            .tab-btn {
+                font-size: 13px;
+                padding: 8px 12px;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Landscape mode para tablets */
+        @media (max-width: 1024px) and (orientation: landscape) {
+            .main-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            body {
+                padding: 15px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -373,6 +500,7 @@
             </div>
             <div class="tabs">
                 <button class="tab-btn active" onclick="switchTab('resumo', event)">📊 Resumo</button>
+                <button class="tab-btn" onclick="switchTab('perfil', event)">👤 Perfil</button>
                 <button class="tab-btn" onclick="switchTab('sintomas', event)">🩹 Sintomas</button>
                 <button class="tab-btn" onclick="switchTab('medicacao', event)">💊 Medicação</button>
                 <button class="tab-btn" onclick="switchTab('historico', event)">📅 Histórico</button>
@@ -1136,6 +1264,114 @@
                         });
                         html += '</div>';
                     }
+                }
+            } else if (tab === 'perfil') {
+                // Informações básicas
+                html += '<div class="section-title">👤 Informação Pessoal</div>';
+                html += '<div class="info-card">';
+                html += '<div class="info-row"><strong>Nome:</strong> ' + p.name + '</div>';
+                html += '<div class="info-row"><strong>Idade:</strong> ' + calcAge(p.birthDate) + ' anos</div>';
+                html += '<div class="info-row"><strong>Género:</strong> ' + (p.gender === 'M' ? 'Masculino' : 'Feminino') + '</div>';
+                html += '<div class="info-row"><strong>Email:</strong> ' + p.email + '</div>';
+                html += '<div class="info-row"><strong>Telefone:</strong> ' + (p.phone || '<span style="color: #999;">Não disponível</span>') + '</div>';
+                html += '</div>';
+                
+                // Alergias Medicamentosas
+                html += '<div class="section-title">⚠️ Alergias Medicamentosas</div>';
+                if (p.medicationAllergies) {
+                    html += '<div class="data-card alert">';
+                    html += '<p style="font-size: 14px; line-height: 1.6; white-space: pre-wrap;">' + p.medicationAllergies + '</p>';
+                    html += '</div>';
+                } else {
+                    html += '<div class="data-card">';
+                    html += '<p style="color: #666; font-style: italic;">Sem alergias registadas</p>';
+                    html += '</div>';
+                }
+                
+                // Outras Doenças
+                html += '<div class="section-title">🏥 Outras Doenças / Condições</div>';
+                if (p.otherDiseases) {
+                    html += '<div class="data-card">';
+                    html += '<p style="font-size: 14px; line-height: 1.6; white-space: pre-wrap;">' + p.otherDiseases + '</p>';
+                    html += '</div>';
+                } else {
+                    html += '<div class="data-card">';
+                    html += '<p style="color: #666; font-style: italic;">Sem outras doenças registadas</p>';
+                    html += '</div>';
+                }
+                
+                // Informações de Transfusão
+                html += '<div class="section-title">🩸 Informação sobre Transfusões</div>';
+                const transfusionData = p.transfusionData || {};
+                
+                if (transfusionData.acceptsTransfusion) {
+                    html += '<div class="info-card">';
+                    
+                    // Aceita transfusões
+                    html += '<div class="info-row"><strong>Aceita transfusões:</strong> ';
+                    if (transfusionData.acceptsTransfusion === 'sim') {
+                        html += '<span style="color: #059669;">✓ Sim</span>';
+                    } else {
+                        html += '<span style="color: #dc2626;">✗ Não</span>';
+                    }
+                    html += '</div>';
+                    
+                    // Data da última transfusão
+                    if (transfusionData.lastTransfusionDate) {
+                        const date = new Date(transfusionData.lastTransfusionDate);
+                        const dateStr = date.toLocaleDateString('pt-PT', {day: '2-digit', month: 'long', year: 'numeric'});
+                        html += '<div class="info-row"><strong>Última transfusão:</strong> ' + dateStr + '</div>';
+                    }
+                    
+                    // História de reação
+                    html += '<div class="info-row"><strong>História de reação:</strong> ';
+                    if (transfusionData.hasReaction === 'sim') {
+                        html += '<span style="color: #d97706;">⚠️ Sim</span>';
+                        if (transfusionData.reactionDetails) {
+                            html += '<br><span style="color: #666; font-size: 14px; margin-left: 20px; font-style: italic;">' + transfusionData.reactionDetails + '</span>';
+                        }
+                    } else if (transfusionData.hasReaction === 'nao') {
+                        html += '<span style="color: #059669;">✓ Não</span>';
+                    } else {
+                        html += '<span style="color: #999;">Não especificado</span>';
+                    }
+                    html += '</div>';
+                    
+                    // Medicação pré-transfusão
+                    html += '<div class="info-row"><strong>Medicação pré-transfusão:</strong> ';
+                    if (transfusionData.needsPreMedication === 'sim') {
+                        html += '<span style="color: #0284c7;">Sim</span>';
+                        if (transfusionData.preMedicationDetails) {
+                            html += '<br><span style="color: #666; font-size: 14px; margin-left: 20px; font-style: italic;">' + transfusionData.preMedicationDetails + '</span>';
+                        }
+                    } else if (transfusionData.needsPreMedication === 'nao') {
+                        html += 'Não';
+                    } else {
+                        html += '<span style="color: #999;">Não especificado</span>';
+                    }
+                    html += '</div>';
+                    
+                    // Hemoglobina basal
+                    if (transfusionData.baselineHemoglobin) {
+                        let hbColor = '#059669';
+                        let hbNote = '';
+                        if (transfusionData.baselineHemoglobin < 7) {
+                            hbColor = '#dc2626';
+                            hbNote = ' (Muito baixa)';
+                        } else if (transfusionData.baselineHemoglobin < 9) {
+                            hbColor = '#d97706';
+                            hbNote = ' (Baixa)';
+                        }
+                        html += '<div class="info-row"><strong>Hemoglobina basal:</strong> ';
+                        html += '<span style="color: ' + hbColor + '; font-weight: 600;">' + transfusionData.baselineHemoglobin + ' g/dL' + hbNote + '</span>';
+                        html += '</div>';
+                    }
+                    
+                    html += '</div>';
+                } else {
+                    html += '<div class="data-card">';
+                    html += '<p style="color: #666; font-style: italic;">Sem informações de transfusão registadas</p>';
+                    html += '</div>';
                 }
             } else {
                 html += '<div class="data-card"><p style="color: #666;">Secção não disponível</p></div>';
