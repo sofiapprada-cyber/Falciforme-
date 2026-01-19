@@ -1,0 +1,2255 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Falciforme+ | Portal do Doente</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 500px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        .login-screen, .register-screen {
+            padding: 40px 30px;
+        }
+
+        .logo {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .logo h1 {
+            color: #667eea;
+            font-size: 28px;
+            margin-bottom: 5px;
+        }
+
+        .logo p {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            color: #333;
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: white;
+            color: #667eea;
+            border: 2px solid #667eea;
+            margin-top: 10px;
+        }
+
+        .btn-secondary:hover {
+            background: #f8f9ff;
+        }
+
+        .error-message {
+            background: #fee;
+            color: #c33;
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            font-size: 14px;
+            display: none;
+        }
+
+        .app-screen {
+            display: none;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+        }
+
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .user-info h2 {
+            font-size: 20px;
+            margin-bottom: 5px;
+        }
+
+        .user-info p {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .logout-btn {
+            background: rgba(255,255,255,0.2);
+            border: 1px solid rgba(255,255,255,0.3);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .logout-btn:hover {
+            background: rgba(255,255,255,0.3);
+        }
+
+        .content {
+            padding: 20px;
+            padding-bottom: 80px;
+            min-height: 400px;
+        }
+
+        .section-title {
+            font-size: 18px;
+            color: #333;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        .info-card {
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+
+        .info-card h3 {
+            color: #667eea;
+            font-size: 16px;
+            margin-bottom: 8px;
+        }
+
+        .bottom-nav {
+            display: flex;
+            border-top: 1px solid #e0e0e0;
+            background: white;
+        }
+
+        .nav-item {
+            flex: 1;
+            text-align: center;
+            padding: 10px 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: none;
+            background: none;
+            color: #999;
+            min-width: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .nav-item.active {
+            color: #667eea;
+        }
+
+        .nav-icon {
+            font-size: 20px;
+            margin-bottom: 3px;
+        }
+
+        .nav-label {
+            font-size: 10px;
+            white-space: nowrap;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .quick-actions {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .quick-action {
+            background: rgba(255,255,255,0.2);
+            padding: 15px;
+            border-radius: 12px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 1px solid rgba(255,255,255,0.3);
+        }
+
+        .quick-action:hover {
+            background: rgba(255,255,255,0.3);
+            transform: translateY(-2px);
+        }
+
+        .quick-action-icon {
+            font-size: 24px;
+            margin-bottom: 5px;
+        }
+
+        .quick-action-text {
+            font-size: 13px;
+        }
+
+        .symptom-card, .medication-card {
+            background: #f8f9ff;
+            border: 2px solid #e0e7ff;
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .card-title {
+            color: #667eea;
+            font-weight: 600;
+            font-size: 16px;
+        }
+
+        .badge {
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .badge-success {
+            background: #4ade80;
+            color: white;
+        }
+
+        .badge-warning {
+            background: #f59e0b;
+            color: white;
+        }
+
+        .badge-danger {
+            background: #ef4444;
+            color: white;
+        }
+
+        .form-card {
+            background: #f8f9ff;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+        }
+
+        .form-row {
+            margin-bottom: 15px;
+        }
+
+        .form-row label {
+            display: block;
+            color: #333;
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .form-row select, .form-row input[type="number"], .form-row input[type="date"], .form-row input[type="time"], .form-row textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 16px;
+            background: white;
+        }
+
+        .form-row textarea {
+            min-height: 80px;
+            resize: vertical;
+            font-family: inherit;
+        }
+
+        .success-message {
+            background: #d4edda;
+            color: #155724;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            display: none;
+        }
+
+        .symptom-indicator {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: white;
+            font-size: 20px;
+        }
+
+        .level-low { background: #fbbf24; }
+        .level-medium { background: #f97316; }
+        .level-high { background: #dc2626; }
+        .level-fever { background: #f59e0b; }
+        .level-fatigue { background: #8b5cf6; }
+        .level-breathing { background: #06b6d4; }
+        .level-breathing { background: #3b82f6; }
+
+        .medication-card {
+            background: #f0f9ff;
+            border-color: #bae6fd;
+        }
+
+        .medication-card.editable {
+            background: #f0fdf4;
+            border-color: #bbf7d0;
+        }
+
+        .medication-card.sos {
+            background: #fff5f5;
+            border-color: #fecaca;
+        }
+
+        .med-time {
+            display: inline-block;
+            background: #667eea;
+            color: white;
+            padding: 4px 10px;
+            border-radius: 8px;
+            font-size: 12px;
+            margin: 5px 5px 0 0;
+        }
+
+        .taken-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 2px solid #bae6fd;
+        }
+
+        .btn-taken, .btn-not-taken {
+            flex: 1;
+            padding: 10px;
+            font-size: 14px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-taken {
+            background: #4ade80;
+            color: white;
+        }
+
+        .btn-not-taken {
+            background: #e5e7eb;
+            color: #666;
+        }
+
+        .btn-taken.active {
+            background: #22c55e;
+            box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.2);
+        }
+
+        .btn-not-taken.active {
+            background: #ef4444;
+            color: white;
+            box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.2);
+        }
+
+        .faq-item {
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 15px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .faq-item:hover {
+            border-color: #667eea;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.1);
+        }
+
+        .faq-item h3 {
+            color: #667eea;
+            font-size: 16px;
+            margin-bottom: 8px;
+        }
+
+        .faq-item p {
+            color: #666;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .faq-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+
+        .faq-content.show {
+            max-height: 1500px;
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        .calendar-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 15px;
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            margin-bottom: 10px;
+        }
+
+        .calendar-item.urgent {
+            border-color: #ef4444;
+            background: #fef2f2;
+        }
+
+        .calendar-date {
+            background: #667eea;
+            color: white;
+            padding: 10px;
+            border-radius: 10px;
+            text-align: center;
+            min-width: 60px;
+        }
+
+        .calendar-date.urgent-date {
+            background: #ef4444;
+        }
+
+        .calendar-date-day {
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .calendar-date-month {
+            font-size: 12px;
+            text-transform: uppercase;
+        }
+
+        .calendar-info {
+            flex: 1;
+        }
+
+        .calendar-info h4 {
+            color: #333;
+            font-size: 16px;
+            margin-bottom: 5px;
+        }
+
+        .calendar-info p {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .detail-row {
+            display: flex;
+            gap: 20px;
+            margin-top: 10px;
+            font-size: 14px;
+            color: #666;
+        }
+
+        .detail-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .btn-small {
+            padding: 8px 16px;
+            font-size: 14px;
+            width: auto;
+            display: inline-block;
+        }
+
+        .edit-section {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 2px solid #bbf7d0;
+            display: none;
+        }
+
+        .edit-section.show {
+            display: block;
+        }
+
+        .status-text {
+            margin-top: 10px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .status-text.taken {
+            color: #22c55e;
+        }
+
+        .status-text.not-taken {
+            color: #ef4444;
+        }
+
+        /* Media queries para mobile */
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+
+            .container {
+                border-radius: 10px;
+            }
+
+            .nav-icon {
+                font-size: 18px;
+            }
+
+            .nav-label {
+                font-size: 9px;
+            }
+
+            .nav-item {
+                padding: 8px 3px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Login Screen -->
+        <div class="login-screen" id="loginScreen">
+            <div class="logo">
+                <h1>🩸 Falciforme+</h1>
+                <p>Portal do Doente</p>
+            </div>
+            
+            <div class="error-message" id="loginError"></div>
+            
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="loginEmail">Email</label>
+                    <input type="email" id="loginEmail" required placeholder="seu@email.com" autocomplete="email">
+                </div>
+                
+                <div class="form-group">
+                    <label for="loginPassword">Password</label>
+                    <input type="password" id="loginPassword" required placeholder="••••••••" autocomplete="current-password">
+                </div>
+                
+                <button type="submit" class="btn btn-primary">Entrar</button>
+                <button type="button" class="btn btn-secondary" onclick="showRegister()">Criar Conta</button>
+            </form>
+
+            <p style="text-align: center; margin-top: 20px; color: #666; font-size: 14px;">
+                Conta demo: <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="244041494b64424548474d424b5649410a5450">[email&#160;protected]</a> / demo123
+            </p>
+        </div>
+
+        <!-- Register Screen -->
+        <div class="register-screen hidden" id="registerScreen">
+            <div class="logo">
+                <h1>🩸 Falciforme+</h1>
+                <p>Criar Nova Conta</p>
+            </div>
+            
+            <div class="error-message" id="registerError"></div>
+            
+            <form id="registerForm">
+                <div class="form-group">
+                    <label for="registerName">Nome Completo</label>
+                    <input type="text" id="registerName" required placeholder="João Silva" autocomplete="name">
+                </div>
+                
+                <div class="form-group">
+                    <label for="registerBirthDate">Data de Nascimento</label>
+                    <input type="date" id="registerBirthDate" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="registerGender">Género</label>
+                    <select id="registerGender" required style="width: 100%; padding: 12px 15px; border: 2px solid #e0e0e0; border-radius: 10px; font-size: 16px;">
+                        <option value="">Selecione...</option>
+                        <option value="M">Masculino</option>
+                        <option value="F">Feminino</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="registerPhone">Telefone (opcional)</label>
+                    <input type="tel" id="registerPhone" placeholder="912 345 678">
+                </div>
+                
+                <div class="form-group">
+                    <label for="registerEmail">Email</label>
+                    <input type="email" id="registerEmail" required placeholder="seu@email.com" autocomplete="email">
+                </div>
+                
+                <div class="form-group">
+                    <label for="registerPassword">Password</label>
+                    <input type="password" id="registerPassword" required placeholder="••••••••" minlength="6" autocomplete="new-password">
+                </div>
+                
+                <div class="form-group">
+                    <label for="registerPasswordConfirm">Confirmar Password</label>
+                    <input type="password" id="registerPasswordConfirm" required placeholder="••••••••" minlength="6" autocomplete="new-password">
+                </div>
+                
+                <button type="submit" class="btn btn-primary">Registar</button>
+                <button type="button" class="btn btn-secondary" onclick="showLogin()">Já tenho conta</button>
+            </form>
+        </div>
+
+        <!-- App Screen -->
+        <div class="app-screen" id="appScreen">
+            <div class="header">
+                <div class="header-top">
+                    <div class="user-info">
+                        <h2>Olá, <span id="userName">Doente</span>!</h2>
+                        <p>Bem-vindo de volta</p>
+                    </div>
+                    <button class="logout-btn" onclick="logout()">Sair</button>
+                </div>
+
+                <div class="quick-actions">
+                    <div class="quick-action" onclick="switchTab('sintomas')">
+                        <div class="quick-action-icon">🩹</div>
+                        <div class="quick-action-text">Registar Sintomas</div>
+                    </div>
+                    <div class="quick-action" onclick="switchTab('medicacao')">
+                        <div class="quick-action-icon">💊</div>
+                        <div class="quick-action-text">Medicação</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="content">
+                <!-- Início Tab -->
+                <div class="tab-content active" id="inicioTab">
+                    <h3 class="section-title">Resumo de Hoje</h3>
+                    
+                    <div class="info-card">
+                        <h3>💊 Medicação</h3>
+                        <p>Hidroxiureia: ✓ Pequeno-almoço | ⏳ Jantar</p>
+                        <p>Ácido Fólico: ✓ Tomado</p>
+                    </div>
+
+                    <div class="info-card">
+                        <h3>📅 Próxima Consulta</h3>
+                        <p><strong>Hematologia</strong></p>
+                        <p>22 Janeiro 2026 às 10:30</p>
+                    </div>
+
+                    <div class="info-card">
+                        <h3>🩹 Último Sintoma</h3>
+                        <p>Dor nas pernas - Nível 7/10</p>
+                        <p style="font-size: 12px; color: #999; margin-top: 5px;">Hoje às 10:30</p>
+                    </div>
+                </div>
+
+                <!-- FAQ Tab -->
+                <div class="tab-content" id="faqTab">
+                    <h3 class="section-title">Informação sobre Anemia Falciforme</h3>
+                    
+                    <div class="faq-item" onclick="toggleFaq(this)">
+                        <h3>🩸 O que é Anemia Falciforme?</h3>
+                        <p>Doença genética que afeta os glóbulos vermelhos</p>
+                        <div class="faq-content">
+                            <p><strong>Definição:</strong> A anemia falciforme é uma doença hereditária onde os glóbulos vermelhos têm forma de foice (meia-lua) em vez de redonda.</p>
+                            <p style="margin-top: 10px;"><strong>O que acontece:</strong></p>
+                            <p>• Os glóbulos vermelhos em forma de foice são mais rígidos</p>
+                            <p>• Podem bloquear vasos sanguíneos pequenos</p>
+                            <p>• Vivem menos tempo (10-20 dias vs 120 dias normais)</p>
+                            <p>• Causam anemia crónica</p>
+                            <p style="margin-top: 10px;"><strong>Genética:</strong> É hereditária - ambos os pais transmitem o gene. Não é contagiosa.</p>
+                        </div>
+                    </div>
+
+                    <div class="faq-item" onclick="toggleFaq(this)">
+                        <h3>🩹 Crises de Dor</h3>
+                        <p>Como identificar, prevenir e gerir</p>
+                        <div class="faq-content">
+                            <p><strong>O que são:</strong> Crises vaso-oclusivas - quando células em foice bloqueiam vasos sanguíneos, reduzindo fluxo de oxigénio.</p>
+                            <p style="margin-top: 10px;"><strong>Desencadeantes Comuns:</strong></p>
+                            <p>• Desidratação</p>
+                            <p>• Temperaturas extremas (frio ou calor)</p>
+                            <p>• Infeções</p>
+                            <p>• Stress físico ou emocional</p>
+                            <p>• Altitudes elevadas</p>
+                            <p style="margin-top: 10px;"><strong>Como Prevenir:</strong></p>
+                            <p>• Beber 2-3 litros de água por dia</p>
+                            <p>• Evitar mudanças bruscas de temperatura</p>
+                            <p>• Tomar medicação regularmente</p>
+                            <p>• Descansar adequadamente</p>
+                        </div>
+                    </div>
+
+                    <h3 class="section-title" style="margin-top: 30px;">Informação sobre Medicação</h3>
+
+                    <div class="faq-item" onclick="toggleFaq(this)">
+                        <h3>💊 Hidroxiureia</h3>
+                        <p>Medicamento principal para anemia falciforme</p>
+                        <div class="faq-content">
+                            <p><strong>O que faz:</strong></p>
+                            <p>• Aumenta hemoglobina fetal (HbF)</p>
+                            <p>• Reduz frequência de crises de dor em 50%</p>
+                            <p>• Diminui necessidade de transfusões</p>
+                            <p>• Previne complicações graves</p>
+                            <p style="margin-top: 10px;"><strong>Como tomar:</strong></p>
+                            <p>• Tomar TODOS OS DIAS à mesma hora</p>
+                            <p>• Pode ser tomado com ou sem alimentos</p>
+                            <p>• Beber muito água</p>
+                            <p>• NUNCA parar sem falar com o médico</p>
+                            <p style="margin-top: 10px;"><strong>Efeitos Secundários Comuns:</strong></p>
+                            <p>• Náuseas leves (passam com o tempo)</p>
+                            <p>• Pele mais seca</p>
+                            <p>• Alterações nas unhas</p>
+                        </div>
+                    </div>
+
+                    <div class="faq-item" onclick="toggleFaq(this)">
+                        <h3>💊 Ácido Fólico</h3>
+                        <p>Essencial para produção de glóbulos vermelhos</p>
+                        <div class="faq-content">
+                            <p><strong>O que faz:</strong></p>
+                            <p>• Ajuda na produção de glóbulos vermelhos saudáveis</p>
+                            <p>• Compensa destruição acelerada das células</p>
+                            <p>• Previne anemia megaloblástica</p>
+                            <p style="margin-top: 10px;"><strong>Como tomar:</strong></p>
+                            <p>• 5mg por dia</p>
+                            <p>• Pode ser tomado a qualquer hora</p>
+                            <p>• Idealmente com alimentos</p>
+                            <p style="margin-top: 10px;"><strong>Importante:</strong> É seguro e tem poucos efeitos secundários.</p>
+                        </div>
+                    </div>
+
+                    <div class="faq-item" onclick="toggleFaq(this)">
+                        <h3>🩹 Analgésicos SOS</h3>
+                        <p>Para alívio da dor durante crises</p>
+                        <div class="faq-content">
+                            <p><strong>Paracetamol 1000mg:</strong></p>
+                            <p>• Para dor leve a moderada</p>
+                            <p>• Tomar de 8 em 8 horas</p>
+                            <p>• Máximo 4g por dia (4 comprimidos)</p>
+                            <p style="margin-top: 10px;"><strong>Ibuprofeno 400mg:</strong></p>
+                            <p>• Para dor moderada a forte</p>
+                            <p>• Tomar de 8 em 8 horas</p>
+                            <p>• Tomar SEMPRE com alimentos</p>
+                            <p style="margin-top: 10px;"><strong>Metamizol 575mg:</strong></p>
+                            <p>• Para dor forte</p>
+                            <p>• Tomar de 6 em 6 horas</p>
+                            <p>• Máximo 4 tomas por dia</p>
+                            <p style="margin-top: 10px;"><strong>⚠️ Atenção:</strong> Se a dor não melhorar ou piorar, vá ao hospital!</p>
+                        </div>
+                    </div>
+
+                    <div class="faq-item" onclick="toggleFaq(this)">
+                        <h3>💧 Hidratação</h3>
+                        <p>Fundamental para prevenir crises</p>
+                        <div class="faq-content">
+                            <p><strong>Porquê é tão importante:</strong></p>
+                            <p>• Mantém sangue fluido</p>
+                            <p>• Previne células de adquirirem forma de foice</p>
+                            <p>• Reduz risco de bloqueios vasculares</p>
+                            <p style="margin-top: 10px;"><strong>Quanto beber:</strong></p>
+                            <p>• Adultos: 2.5-3 litros por dia</p>
+                            <p>• Mais em dias quentes ou com exercício</p>
+                            <p>• Urina clara = boa hidratação</p>
+                            <p style="margin-top: 10px;"><strong>Dicas:</strong></p>
+                            <p>• Ter sempre garrafa de água consigo</p>
+                            <p>• Beber de 2 em 2 horas</p>
+                            <p>• Não esperar ter sede</p>
+                        </div>
+                    </div>
+
+                    <div class="faq-item" onclick="toggleFaq(this)">
+                        <h3>🏥 Quando ir ao Hospital</h3>
+                        <p>Sinais de emergência</p>
+                        <div class="faq-content">
+                            <p><strong>🚨 IR IMEDIATAMENTE:</strong></p>
+                            <p style="margin-top: 10px;"><strong>Febre:</strong></p>
+                            <p>• Temperatura ≥38.5°C (SEMPRE urgência!)</p>
+                            <p style="margin-top: 10px;"><strong>Respiração:</strong></p>
+                            <p>• Dificuldade em respirar</p>
+                            <p>• Dor no peito</p>
+                            <p>• Tosse com sangue</p>
+                            <p style="margin-top: 10px;"><strong>Neurológico:</strong></p>
+                            <p>• Dor de cabeça súbita e intensa</p>
+                            <p>• Tonturas ou desmaio</p>
+                            <p>• Confusão mental</p>
+                            <p>• Fraqueza súbita de um lado do corpo</p>
+                            <p style="margin-top: 10px;"><strong>Dor:</strong></p>
+                            <p>• Dor abdominal intensa</p>
+                            <p>• Dor muito forte que não passa com medicação</p>
+                            <p style="margin-top: 10px;"><strong>⚠️ LIGUE 112 se tiver qualquer destes sintomas!</strong></p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sintomas Tab -->
+                <div class="tab-content" id="sintomasTab">
+                    <h3 class="section-title">Registar Sintomas</h3>
+                    
+                    <div class="success-message" id="symptomSuccess">
+                        ✓ Sintoma registado com sucesso!
+                    </div>
+
+                    <div class="form-card">
+                        <div class="form-row">
+                            <label>Tipo de Sintoma</label>
+                            <select id="symptomType" onchange="toggleSymptomFields()">
+                                <option value="dor">Dor</option>
+                                <option value="febre">Febre</option>
+                                <option value="cansaco">Cansaço</option>
+                                <option value="respiracao">Dificuldade Respiratória</option>
+                            </select>
+                        </div>
+
+                        <!-- Dor -->
+                        <div id="dorFields">
+                            <div class="form-row">
+                                <label>Intensidade (1-10)</label>
+                                <select id="painLevel">
+                                    <option value="1">1 - Muito Leve</option>
+                                    <option value="2">2 - Leve</option>
+                                    <option value="3">3 - Leve a Moderada</option>
+                                    <option value="4">4 - Moderada</option>
+                                    <option value="5">5 - Moderada</option>
+                                    <option value="6">6 - Moderada a Forte</option>
+                                    <option value="7">7 - Forte</option>
+                                    <option value="8">8 - Forte</option>
+                                    <option value="9">9 - Muito Forte</option>
+                                    <option value="10">10 - Insuportável</option>
+                                </select>
+                            </div>
+                            <div class="form-row">
+                                <label>Localização</label>
+                                <select id="painLocation">
+                                    <option>Costas</option>
+                                    <option>Peito</option>
+                                    <option>Abdómen</option>
+                                    <option>Braços</option>
+                                    <option>Pernas</option>
+                                    <option>Articulações</option>
+                                    <option>Todo o corpo</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Febre -->
+                        <div id="febreFields" style="display: none;">
+                            <div class="form-row">
+                                <label>Temperatura (°C)</label>
+                                <input type="number" id="temperature" step="0.1" min="35" max="42" placeholder="Ex: 38.5">
+                            </div>
+                            <div class="alert" style="background: #fef2f2; border: 2px solid #fecaca; padding: 10px; border-radius: 8px; margin-bottom: 15px; color: #dc2626;">
+                                <strong>⚠️ IMPORTANTE:</strong> Febre ≥38.5°C é uma URGÊNCIA! Deve ir ao hospital imediatamente!
+                            </div>
+                        </div>
+
+                        <!-- Cansaço -->
+                        <div id="cansacoFields" style="display: none;">
+                            <div class="form-row">
+                                <label>Nível de Cansaço</label>
+                                <select id="fatigueLevel">
+                                    <option>Leve - consigo fazer atividades</option>
+                                    <option>Moderado - preciso descansar mais</option>
+                                    <option>Forte - difícil fazer tarefas simples</option>
+                                    <option>Extremo - não consigo sair da cama</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Respiração -->
+                        <div id="respiracaoFields" style="display: none;">
+                            <div class="form-row">
+                                <label>Gravidade</label>
+                                <select id="breathingLevel">
+                                    <option>Leve - falta de ar ao esforço</option>
+                                    <option>Moderada - falta de ar a caminhar</option>
+                                    <option>Grave - falta de ar em repouso</option>
+                                    <option>Muito Grave - não consigo falar frases</option>
+                                </select>
+                            </div>
+                            <div class="alert" style="background: #fef2f2; border: 2px solid #fecaca; padding: 10px; border-radius: 8px; margin-bottom: 15px; color: #dc2626;">
+                                <strong>⚠️ ATENÇÃO:</strong> Dificuldade respiratória pode ser grave! Se piorar, vá ao hospital!
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <label>Notas</label>
+                            <textarea id="symptomNotes" placeholder="Informação adicional..."></textarea>
+                        </div>
+
+                        <button class="btn btn-primary" onclick="saveSymptom()">Registar Sintoma</button>
+                    </div>
+
+                    <h3 class="section-title">Histórico Recente</h3>
+                    
+                    <div id="symptomHistory">
+                        <p style="color: #999; text-align: center; padding: 40px;">
+                            Nenhum sintoma registado ainda
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Medicação Tab -->
+                <div class="tab-content" id="medicacaoTab">
+                    <h3 class="section-title">Medicação Diária</h3>
+                    
+                    <!-- Alergias Medicamentosas -->
+                    <div style="background: #fef2f2; border: 2px solid #fecaca; border-radius: 12px; padding: 15px; margin-bottom: 25px;">
+                        <h4 style="color: #dc2626; margin-bottom: 12px;">⚠️ Alergias Medicamentosas</h4>
+                        <form id="allergiesForm" style="margin: 0;">
+                            <div class="form-group" style="margin-bottom: 10px;">
+                                <label for="medicationAllergies" style="font-weight: normal; font-size: 14px; color: #666;">
+                                    Liste medicamentos aos quais é alérgico (muito importante para sua segurança)
+                                </label>
+                                <textarea 
+                                    id="medicationAllergies" 
+                                    rows="3" 
+                                    placeholder="Ex: Penicilina, Aspirina, Morfina..."
+                                    style="width: 100%; padding: 12px 15px; border: 2px solid #fecaca; border-radius: 10px; font-size: 14px; margin-top: 8px; font-family: inherit; resize: vertical;"
+                                ></textarea>
+                            </div>
+                            <button type="button" onclick="saveMedicationAllergies()" class="btn btn-primary" style="font-size: 14px; padding: 10px;">
+                                Guardar Alergias
+                            </button>
+                        </form>
+                        <div id="allergiesSavedMessage" style="display: none; background: #d4edda; border: 1px solid #c3e6cb; border-radius: 8px; padding: 10px; margin-top: 10px; color: #155724; font-size: 14px;">
+                            ✓ Alergias guardadas com sucesso!
+                        </div>
+                        <p style="margin-top: 12px; font-size: 13px; color: #991b1b; font-style: italic;">
+                            💡 Esta informação é vital para evitar reações alérgicas graves. Mantenha sempre atualizada.
+                        </p>
+                    </div>
+                    
+                    <div class="success-message" id="medicationSuccess">
+                        ✓ Alterações guardadas!
+                    </div>
+
+                    <!-- Hidroxiureia -->
+                    <div class="medication-card editable">
+                        <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 10px;">
+                            <div>
+                                <h3 style="color: #667eea; margin-bottom: 5px;">💊 Hidroxiureia</h3>
+                                <p><strong>Dosagem:</strong> <span id="hydroxyDose">500</span>mg</p>
+                            </div>
+                            <button class="btn btn-secondary btn-small" onclick="toggleEdit('hydroxyEdit')">
+                                ⚙️ Ajustar
+                            </button>
+                        </div>
+                        
+                        <p><strong>Horários:</strong> <span class="med-time">Pequeno-almoço</span> <span class="med-time">Jantar</span></p>
+
+                        <div id="hydroxyEdit" class="edit-section">
+                            <div class="form-row">
+                                <label>Nova Dosagem</label>
+                                <select id="hydroxyDoseSelect">
+                                    <option value="250">250mg</option>
+                                    <option value="500" selected>500mg</option>
+                                    <option value="750">750mg</option>
+                                    <option value="1000">1000mg</option>
+                                    <option value="1500">1500mg</option>
+                                </select>
+                            </div>
+                            <button class="btn btn-primary" onclick="saveDose()">Guardar Dose</button>
+                        </div>
+
+                        <div class="taken-buttons">
+                            <div style="flex: 1;">
+                                <p style="margin-bottom: 10px; font-weight: 600; color: #333; font-size: 14px;">Pequeno-almoço:</p>
+                                <div style="display: flex; gap: 10px;">
+                                    <button class="btn-taken" onclick="markMed('hydroxyMorning', true)">✓ Tomei</button>
+                                    <button class="btn-not-taken" onclick="markMed('hydroxyMorning', false)">✗ Não tomei</button>
+                                </div>
+                                <p id="hydroxyMorningStatus" class="status-text"></p>
+                            </div>
+                        </div>
+
+                        <div class="taken-buttons">
+                            <div style="flex: 1;">
+                                <p style="margin-bottom: 10px; font-weight: 600; color: #333; font-size: 14px;">Jantar:</p>
+                                <div style="display: flex; gap: 10px;">
+                                    <button class="btn-taken" onclick="markMed('hydroxyEvening', true)">✓ Tomei</button>
+                                    <button class="btn-not-taken" onclick="markMed('hydroxyEvening', false)">✗ Não tomei</button>
+                                </div>
+                                <p id="hydroxyEveningStatus" class="status-text"></p>
+                            </div>
+                        </div>
+
+                        <p style="margin-top: 15px; font-size: 14px; color: #666; font-style: italic;">
+                            Previne crises de dor. Tomar sempre à mesma hora.
+                        </p>
+                    </div>
+
+                    <!-- Ácido Fólico -->
+                    <div class="medication-card">
+                        <h3 style="color: #667eea; margin-bottom: 5px;">💊 Ácido Fólico</h3>
+                        <p><strong>Dosagem:</strong> 5mg/dia</p>
+                        <p><strong>Horário:</strong> <span class="med-time">Pequeno-almoço</span></p>
+
+                        <div class="taken-buttons">
+                            <button class="btn-taken" onclick="markMed('folic', true)">✓ Tomei hoje</button>
+                            <button class="btn-not-taken" onclick="markMed('folic', false)">✗ Não tomei</button>
+                        </div>
+                        <p id="folicStatus" class="status-text"></p>
+
+                        <p style="margin-top: 15px; font-size: 14px; color: #666; font-style: italic;">
+                            Importante para produção de glóbulos vermelhos.
+                        </p>
+                    </div>
+
+                    <h3 class="section-title" style="margin-top: 25px;">Analgésicos SOS</h3>
+                    <p style="color: #666; margin-bottom: 15px; font-size: 14px;">Tomar apenas quando tiver dor</p>
+
+                    <!-- Paracetamol -->
+                    <div class="medication-card sos">
+                        <h3 style="color: #dc2626; margin-bottom: 5px;">🩹 Paracetamol</h3>
+                        <p><strong>Dosagem:</strong> 1000mg (1g)</p>
+                        <p><strong>Intervalo:</strong> De 8 em 8 horas</p>
+                        <p><strong>Máximo:</strong> 4 comprimidos/dia (4g)</p>
+                        
+                        <div class="taken-buttons">
+                            <button class="btn btn-primary" onclick="registerSOSMed('paracetamol')">
+                                ✓ Registar Toma
+                            </button>
+                        </div>
+
+                        <div id="paracetamolLog" style="margin-top: 15px; padding-top: 15px; border-top: 2px solid #fecaca;">
+                            <p style="font-weight: 600; margin-bottom: 10px; color: #333;">Tomas de Hoje:</p>
+                            <div id="paracetamolList" style="font-size: 14px; color: #666;">
+                                <p style="color: #999; font-style: italic;">Nenhuma toma registada hoje</p>
+                            </div>
+                        </div>
+
+                        <p style="margin-top: 15px; font-size: 14px; color: #666; font-style: italic;">
+                            Para dor leve a moderada.
+                        </p>
+                    </div>
+
+                    <!-- Ibuprofeno -->
+                    <div class="medication-card sos">
+                        <h3 style="color: #dc2626; margin-bottom: 5px;">🩹 Ibuprofeno</h3>
+                        <p><strong>Dosagem:</strong> 400mg</p>
+                        <p><strong>Intervalo:</strong> De 8 em 8 horas</p>
+                        <p><strong>Importante:</strong> Tomar SEMPRE com alimentos</p>
+                        
+                        <div class="taken-buttons">
+                            <button class="btn btn-primary" onclick="registerSOSMed('ibuprofeno')">
+                                ✓ Registar Toma
+                            </button>
+                        </div>
+
+                        <div id="ibuprofenoLog" style="margin-top: 15px; padding-top: 15px; border-top: 2px solid #fecaca;">
+                            <p style="font-weight: 600; margin-bottom: 10px; color: #333;">Tomas de Hoje:</p>
+                            <div id="ibuprofenoList" style="font-size: 14px; color: #666;">
+                                <p style="color: #999; font-style: italic;">Nenhuma toma registada hoje</p>
+                            </div>
+                        </div>
+
+                        <p style="margin-top: 15px; font-size: 14px; color: #666; font-style: italic;">
+                            Para dor moderada a forte.
+                        </p>
+                    </div>
+
+                    <!-- Metamizol -->
+                    <div class="medication-card sos">
+                        <h3 style="color: #dc2626; margin-bottom: 5px;">🩹 Metamizol (Nolotil)</h3>
+                        <p><strong>Dosagem:</strong> 575mg</p>
+                        <p><strong>Intervalo:</strong> De 6 em 6 horas</p>
+                        <p><strong>Máximo:</strong> 4 tomas/dia</p>
+                        
+                        <div class="taken-buttons">
+                            <button class="btn btn-primary" onclick="registerSOSMed('metamizol')">
+                                ✓ Registar Toma
+                            </button>
+                        </div>
+
+                        <div id="metamizolLog" style="margin-top: 15px; padding-top: 15px; border-top: 2px solid #fecaca;">
+                            <p style="font-weight: 600; margin-bottom: 10px; color: #333;">Tomas de Hoje:</p>
+                            <div id="metamizolList" style="font-size: 14px; color: #666;">
+                                <p style="color: #999; font-style: italic;">Nenhuma toma registada hoje</p>
+                            </div>
+                        </div>
+
+                        <p style="margin-top: 15px; font-size: 14px; color: #666; font-style: italic;">
+                            Para dor forte. Se não melhorar, vá ao hospital.
+                        </p>
+                    </div>
+
+                    <div style="background: #fef2f2; border: 2px solid #fecaca; border-radius: 12px; padding: 15px; margin-top: 20px;">
+                        <h4 style="color: #dc2626; margin-bottom: 10px;">⚠️ Atenção</h4>
+                        <p style="color: #666; font-size: 14px; line-height: 1.5;">
+                            Não exceda as doses máximas diárias. Se a dor não melhorar ou piorar após tomar a medicação, dirija-se ao serviço de urgência.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Calendário Tab -->
+                <div class="tab-content" id="calendarioTab">
+                    <h3 class="section-title">Próximas Consultas</h3>
+                    
+                    <div class="calendar-item">
+                        <div class="calendar-date">
+                            <div class="calendar-date-day">22</div>
+                            <div class="calendar-date-month">JAN</div>
+                        </div>
+                        <div class="calendar-info">
+                            <h4>Hematologia</h4>
+                            <p>Dr. João Santos</p>
+                            <div class="detail-row">
+                                <div class="detail-item">
+                                    <span>🕒</span>
+                                    <span>10:30</span>
+                                </div>
+                                <div class="detail-item">
+                                    <span>📍</span>
+                                    <span>Hospital Central</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="calendar-item">
+                        <div class="calendar-date">
+                            <div class="calendar-date-day">5</div>
+                            <div class="calendar-date-month">FEV</div>
+                        </div>
+                        <div class="calendar-info">
+                            <h4>Análises de Sangue</h4>
+                            <p>Rotina trimestral</p>
+                            <div class="detail-row">
+                                <div class="detail-item">
+                                    <span>🕒</span>
+                                    <span>08:00</span>
+                                </div>
+                                <div class="detail-item">
+                                    <span>📍</span>
+                                    <span>Laboratório Central</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h3 class="section-title" style="margin-top: 30px;">Histórico Urgências</h3>
+
+                    <div class="calendar-item urgent">
+                        <div class="calendar-date urgent-date">
+                            <div class="calendar-date-day">15</div>
+                            <div class="calendar-date-month">JAN</div>
+                        </div>
+                        <div class="calendar-info">
+                            <h4>🚨 Urgência - Crise de Dor</h4>
+                            <p>Internamento: 2 dias</p>
+                            <div class="detail-row">
+                                <div class="detail-item">
+                                    <span>🏥</span>
+                                    <span>Hospital Central</span>
+                                </div>
+                                <div class="detail-item">
+                                    <span>💉</span>
+                                    <span>Analgesia IV + Hidratação</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="calendar-item urgent">
+                        <div class="calendar-date urgent-date">
+                            <div class="calendar-date-day">2</div>
+                            <div class="calendar-date-month">JAN</div>
+                        </div>
+                        <div class="calendar-info">
+                            <h4>🚨 Urgência - Febre</h4>
+                            <p>Avaliação e tratamento</p>
+                            <div class="detail-row">
+                                <div class="detail-item">
+                                    <span>🌡️</span>
+                                    <span>39.1°C</span>
+                                </div>
+                                <div class="detail-item">
+                                    <span>💊</span>
+                                    <span>Antibiótico prescrito</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div style="background: #f0f9ff; border: 2px solid #bae6fd; border-radius: 12px; padding: 15px; margin-top: 20px;">
+                        <h4 style="color: #0284c7; margin-bottom: 10px;">💡 Lembrete</h4>
+                        <p style="color: #666; font-size: 14px; line-height: 1.5;">
+                            Em caso de febre (≥38.5°C), dor intensa, dificuldade respiratória ou outros sintomas graves, dirija-se IMEDIATAMENTE ao serviço de urgência.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Perfil Tab -->
+                <div class="tab-content" id="perfilTab">
+                    <h3 class="section-title">Informação Pessoal</h3>
+                    
+                    <div class="info-card">
+                        <p><strong>Nome:</strong> <span id="profileName"></span></p>
+                        <p style="margin-top: 8px;"><strong>Email:</strong> <span id="profileEmail"></span></p>
+                        <p style="margin-top: 8px;"><strong>Telefone:</strong> <span id="profilePhone"></span></p>
+                        <p style="margin-top: 8px;"><strong>NP:</strong> <span id="profileNP">#AF20260118</span></p>
+                    </div>
+
+                    <h3 class="section-title" style="margin-top: 25px;">Informação Clínica</h3>
+                    
+                    <div class="info-card">
+                        <p><strong>Diagnóstico:</strong> Anemia Falciforme SS</p>
+                        <p style="margin-top: 8px;"><strong>Grupo Sanguíneo:</strong> A+</p>
+                        <p style="margin-top: 8px;"><strong>Data Diagnóstico:</strong> 2010</p>
+                    </div>
+
+                    <div class="info-card">
+                        <h3 style="margin-bottom: 15px;">🏥 Outras Doenças / Condições</h3>
+                        <form id="otherDiseasesForm" style="margin: 0;">
+                            <div class="form-group" style="margin-bottom: 15px;">
+                                <label for="otherDiseases" style="font-weight: normal; font-size: 14px; color: #666;">
+                                    Liste outras doenças ou condições médicas que tenha (diabetes, hipertensão, alergias, etc.)
+                                </label>
+                                <textarea 
+                                    id="otherDiseases" 
+                                    rows="4" 
+                                    placeholder="Ex: Diabetes tipo 2, Hipertensão arterial, Alergia à penicilina..."
+                                    style="width: 100%; padding: 12px 15px; border: 2px solid #e0e0e0; border-radius: 10px; font-size: 14px; margin-top: 8px; font-family: inherit; resize: vertical;"
+                                ></textarea>
+                            </div>
+                            <button type="button" onclick="saveOtherDiseases()" class="btn btn-primary" style="font-size: 14px; padding: 10px;">
+                                Guardar
+                            </button>
+                        </form>
+                        <div id="otherDiseasesSavedMessage" style="display: none; background: #d4edda; border: 1px solid #c3e6cb; border-radius: 8px; padding: 10px; margin-top: 10px; color: #155724; font-size: 14px;">
+                            ✓ Informação guardada com sucesso!
+                        </div>
+                    </div>
+
+                    <div class="info-card">
+                        <h3>📊 Últimas Análises</h3>
+                        <p style="margin-top: 8px;"><strong>Hemoglobina:</strong> 9.2 g/dL</p>
+                        <p style="margin-top: 8px;"><strong>Data:</strong> 10 Jan 2026</p>
+                    </div>
+
+                    <div class="info-card">
+                        <h3>👨‍⚕️ Equipa Médica</h3>
+                        <p style="margin-top: 8px;"><strong>Hematologista:</strong> Dr. João Santos</p>
+                        <p style="margin-top: 8px;"><strong>Hospital:</strong> Hospital Central</p>
+                        <p style="margin-top: 8px;"><strong>Contacto Urgência:</strong> 212 XXX XXX</p>
+                    </div>
+                </div>
+
+                <!-- Transfusões Tab -->
+                <div class="tab-content" id="transfusoesTab">
+                    <h3 class="section-title">🩸 Informação sobre Transfusões</h3>
+                    
+                    <div class="info-card">
+                        <form id="transfusionForm" style="margin: 0;">
+                            <div class="form-group" style="margin-bottom: 20px;">
+                                <label style="display: block; font-weight: 600; margin-bottom: 8px; color: #333;">Aceita transfusões sanguíneas?</label>
+                                <div style="display: flex; gap: 20px;">
+                                    <label style="display: flex; align-items: center; font-weight: normal; cursor: pointer;">
+                                        <input type="radio" name="acceptsTransfusion" value="sim" id="acceptsTransfusionYes" style="margin-right: 8px; width: auto;">
+                                        <span>Sim</span>
+                                    </label>
+                                    <label style="display: flex; align-items: center; font-weight: normal; cursor: pointer;">
+                                        <input type="radio" name="acceptsTransfusion" value="nao" id="acceptsTransfusionNo" style="margin-right: 8px; width: auto;">
+                                        <span>Não</span>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="form-group" style="margin-bottom: 20px;">
+                                <label for="lastTransfusionDate">Data da última transfusão</label>
+                                <div style="background: #f0f9ff; border: 2px solid #bae6fd; border-radius: 10px; padding: 12px 15px;">
+                                    <p style="color: #0284c7; font-size: 14px; margin: 0;" id="lastTransfusionDisplay">
+                                        <strong>ℹ️ Esta informação é preenchida automaticamente pelo sistema hospitalar</strong>
+                                    </p>
+                                    <p style="color: #666; font-size: 13px; margin: 8px 0 0 0;" id="lastTransfusionDateText">
+                                        Nenhuma transfusão registada no sistema
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div class="form-group" style="margin-bottom: 20px;">
+                                <label style="display: block; font-weight: 600; margin-bottom: 8px; color: #333;">História de reação transfusional?</label>
+                                <div style="display: flex; gap: 20px; margin-bottom: 10px;">
+                                    <label style="display: flex; align-items: center; font-weight: normal; cursor: pointer;">
+                                        <input type="radio" name="hasReaction" value="sim" id="hasReactionYes" onclick="document.getElementById('reactionDetailsDiv').style.display='block'" style="margin-right: 8px; width: auto;">
+                                        <span>Sim</span>
+                                    </label>
+                                    <label style="display: flex; align-items: center; font-weight: normal; cursor: pointer;">
+                                        <input type="radio" name="hasReaction" value="nao" id="hasReactionNo" onclick="document.getElementById('reactionDetailsDiv').style.display='none'; document.getElementById('reactionDetails').value=''" style="margin-right: 8px; width: auto;">
+                                        <span>Não</span>
+                                    </label>
+                                </div>
+                                <div id="reactionDetailsDiv" style="display: none; margin-top: 10px;">
+                                    <label for="reactionDetails" style="font-size: 14px; color: #666; font-weight: normal;">Descreva a reação:</label>
+                                    <textarea id="reactionDetails" rows="3" placeholder="Ex: Febre, urticária, etc." style="width: 100%; padding: 12px 15px; border: 2px solid #e0e0e0; border-radius: 10px; font-size: 14px; margin-top: 5px; font-family: inherit; resize: vertical;"></textarea>
+                                </div>
+                            </div>
+
+                            <div class="form-group" style="margin-bottom: 20px;">
+                                <label style="display: block; font-weight: 600; margin-bottom: 8px; color: #333;">Necessita de medicação pré-transfusão?</label>
+                                <div style="display: flex; gap: 20px; margin-bottom: 10px;">
+                                    <label style="display: flex; align-items: center; font-weight: normal; cursor: pointer;">
+                                        <input type="radio" name="needsPreMedication" value="sim" id="needsPreMedicationYes" onclick="document.getElementById('preMedicationDetailsDiv').style.display='block'" style="margin-right: 8px; width: auto;">
+                                        <span>Sim</span>
+                                    </label>
+                                    <label style="display: flex; align-items: center; font-weight: normal; cursor: pointer;">
+                                        <input type="radio" name="needsPreMedication" value="nao" id="needsPreMedicationNo" onclick="document.getElementById('preMedicationDetailsDiv').style.display='none'; document.getElementById('preMedicationDetails').value=''" style="margin-right: 8px; width: auto;">
+                                        <span>Não</span>
+                                    </label>
+                                </div>
+                                <div id="preMedicationDetailsDiv" style="display: none; margin-top: 10px;">
+                                    <label for="preMedicationDetails" style="font-size: 14px; color: #666; font-weight: normal;">Especifique a medicação:</label>
+                                    <textarea id="preMedicationDetails" rows="2" placeholder="Ex: Paracetamol 1g, Anti-histamínico" style="width: 100%; padding: 12px 15px; border: 2px solid #e0e0e0; border-radius: 10px; font-size: 14px; margin-top: 5px; font-family: inherit; resize: vertical;"></textarea>
+                                </div>
+                            </div>
+
+                            <div class="form-group" style="margin-bottom: 20px;">
+                                <label for="baselineHemoglobin">Hemoglobina basal (g/dL)</label>
+                                <input type="number" id="baselineHemoglobin" step="0.1" min="0" max="20" placeholder="Ex: 8.5" style="width: 100%; padding: 12px 15px; border: 2px solid #e0e0e0; border-radius: 10px; font-size: 16px;">
+                                <p style="font-size: 12px; color: #666; margin-top: 5px;">Valor típico de hemoglobina em estado estável</p>
+                            </div>
+
+                            <button type="button" onclick="saveTransfusionData()" class="btn btn-primary" style="margin-top: 10px;">
+                                Guardar Informação
+                            </button>
+                        </form>
+                    </div>
+
+                    <div id="transfusionSavedMessage" style="display: none; background: #d4edda; border: 2px solid #c3e6cb; border-radius: 12px; padding: 15px; margin-top: 15px; color: #155724;">
+                        ✓ Informação guardada com sucesso!
+                    </div>
+
+                    <h3 class="section-title" style="margin-top: 30px;">📋 Resumo</h3>
+                    <div class="info-card" id="transfusionSummary">
+                        <p style="color: #999; font-style: italic;">Preencha o formulário acima para ver o resumo das informações.</p>
+                    </div>
+
+                    <div style="background: #f0f9ff; border: 2px solid #bae6fd; border-radius: 12px; padding: 15px; margin-top: 20px;">
+                        <h4 style="color: #0284c7; margin-bottom: 10px;">💡 Informação Importante</h4>
+                        <p style="color: #666; font-size: 14px; line-height: 1.6;">
+                            As transfusões sanguíneas podem ser necessárias em casos de anemia grave ou complicações. 
+                            É importante manter esta informação atualizada para que a equipa médica possa fornecer 
+                            o melhor cuidado possível em situações de emergência.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bottom-nav">
+                <button class="nav-item active" onclick="switchTab('inicio')">
+                    <div class="nav-icon">🏠</div>
+                    <div class="nav-label">Início</div>
+                </button>
+                <button class="nav-item" onclick="switchTab('sintomas')">
+                    <div class="nav-icon">🩹</div>
+                    <div class="nav-label">Sintomas</div>
+                </button>
+                <button class="nav-item" onclick="switchTab('medicacao')">
+                    <div class="nav-icon">💊</div>
+                    <div class="nav-label">Medicação</div>
+                </button>
+                <button class="nav-item" onclick="switchTab('transfusoes')">
+                    <div class="nav-icon">🩸</div>
+                    <div class="nav-label">Transfusões</div>
+                </button>
+                <button class="nav-item" onclick="switchTab('calendario')">
+                    <div class="nav-icon">📅</div>
+                    <div class="nav-label">Calendário</div>
+                </button>
+                <button class="nav-item" onclick="switchTab('perfil')">
+                    <div class="nav-icon">👤</div>
+                    <div class="nav-label">Perfil</div>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+        let users = [
+            { email: 'demo@falciforme.pt', password: 'demo123', name: 'Maria Santos' }
+        ];
+        
+        let currentUser = null;
+        let medicationStatus = {};
+        let sosMedication = {
+            paracetamol: [],
+            ibuprofeno: [],
+            metamizol: []
+        };
+        
+        // Estrutura de dados clínicos do doente
+        let patientData = {
+            symptoms: [],
+            medications: [],
+            sosMeds: { paracetamol: [], ibuprofeno: [], metamizol: [] },
+            appointments: [],
+            emergencies: [],
+            labResults: []
+        };
+
+        // Carregar dados do doente do localStorage
+        function loadPatientData() {
+            if (!currentUser) return;
+            
+            const patients = JSON.parse(localStorage.getItem('patients') || '[]');
+            const patient = patients.find(p => p.email === currentUser.email);
+            
+            if (patient && patient.clinicalData) {
+                patientData = patient.clinicalData;
+                sosMedication = patientData.sosMeds || { paracetamol: [], ibuprofeno: [], metamizol: [] };
+                
+                // Renderizar histórico de sintomas
+                renderSymptomHistory();
+            }
+        }
+
+        // Guardar dados do doente no localStorage
+        function savePatientData() {
+            if (!currentUser) return;
+            
+            const patients = JSON.parse(localStorage.getItem('patients') || '[]');
+            const index = patients.findIndex(p => p.email === currentUser.email);
+            
+            if (index !== -1) {
+                patients[index].clinicalData = patientData;
+                patients[index].lastUpdate = new Date().toISOString();
+                localStorage.setItem('patients', JSON.stringify(patients));
+                console.log('✓ Dados clínicos guardados');
+            }
+        }
+
+        // Guardar dados de transfusão
+        function saveTransfusionData() {
+            if (!currentUser) return;
+            
+            const acceptsTransfusion = document.querySelector('input[name="acceptsTransfusion"]:checked')?.value;
+            const hasReaction = document.querySelector('input[name="hasReaction"]:checked')?.value;
+            const reactionDetails = document.getElementById('reactionDetails').value;
+            const needsPreMedication = document.querySelector('input[name="needsPreMedication"]:checked')?.value;
+            const preMedicationDetails = document.getElementById('preMedicationDetails').value;
+            const baselineHemoglobin = document.getElementById('baselineHemoglobin').value;
+            
+            const patients = JSON.parse(localStorage.getItem('patients') || '[]');
+            const index = patients.findIndex(p => p.email === currentUser.email);
+            
+            if (index !== -1) {
+                // Manter a data da última transfusão se já existir (vem do sistema hospitalar)
+                const existingData = patients[index].transfusionData || {};
+                
+                const transfusionData = {
+                    acceptsTransfusion: acceptsTransfusion || null,
+                    lastTransfusionDate: existingData.lastTransfusionDate || null, // Mantém o valor do sistema hospitalar
+                    hasReaction: hasReaction || null,
+                    reactionDetails: reactionDetails || null,
+                    needsPreMedication: needsPreMedication || null,
+                    preMedicationDetails: preMedicationDetails || null,
+                    baselineHemoglobin: baselineHemoglobin ? parseFloat(baselineHemoglobin) : null,
+                    lastUpdate: new Date().toISOString()
+                };
+                
+                patients[index].transfusionData = transfusionData;
+                patients[index].lastUpdate = new Date().toISOString();
+                localStorage.setItem('patients', JSON.stringify(patients));
+                console.log('✓ Dados de transfusão guardados');
+                
+                // Mostrar mensagem de sucesso
+                const successMsg = document.getElementById('transfusionSavedMessage');
+                successMsg.style.display = 'block';
+                setTimeout(() => {
+                    successMsg.style.display = 'none';
+                }, 3000);
+                
+                // Atualizar resumo
+                updateTransfusionSummary(transfusionData);
+            }
+        }
+
+        // Carregar dados de transfusão
+        function loadTransfusionData() {
+            if (!currentUser) return;
+            
+            const patients = JSON.parse(localStorage.getItem('patients') || '[]');
+            const patient = patients.find(p => p.email === currentUser.email);
+            
+            if (patient && patient.transfusionData) {
+                const data = patient.transfusionData;
+                
+                // Aceita transfusões
+                if (data.acceptsTransfusion) {
+                    const radio = document.querySelector(`input[name="acceptsTransfusion"][value="${data.acceptsTransfusion}"]`);
+                    if (radio) radio.checked = true;
+                }
+                
+                // Data da última transfusão (vem do sistema hospitalar)
+                if (data.lastTransfusionDate) {
+                    const date = new Date(data.lastTransfusionDate);
+                    const dateStr = date.toLocaleDateString('pt-PT', {day: '2-digit', month: 'long', year: 'numeric'});
+                    document.getElementById('lastTransfusionDateText').innerHTML = 
+                        '<strong>📅 ' + dateStr + '</strong>';
+                } else {
+                    document.getElementById('lastTransfusionDateText').textContent = 
+                        'Nenhuma transfusão registada no sistema';
+                }
+                
+                // Reação transfusional
+                if (data.hasReaction) {
+                    const radio = document.querySelector(`input[name="hasReaction"][value="${data.hasReaction}"]`);
+                    if (radio) radio.checked = true;
+                    
+                    if (data.hasReaction === 'sim' && data.reactionDetails) {
+                        document.getElementById('reactionDetailsDiv').style.display = 'block';
+                        document.getElementById('reactionDetails').value = data.reactionDetails;
+                    }
+                }
+                
+                // Medicação pré-transfusão
+                if (data.needsPreMedication) {
+                    const radio = document.querySelector(`input[name="needsPreMedication"][value="${data.needsPreMedication}"]`);
+                    if (radio) radio.checked = true;
+                    
+                    if (data.needsPreMedication === 'sim' && data.preMedicationDetails) {
+                        document.getElementById('preMedicationDetailsDiv').style.display = 'block';
+                        document.getElementById('preMedicationDetails').value = data.preMedicationDetails;
+                    }
+                }
+                
+                // Hemoglobina basal
+                if (data.baselineHemoglobin) {
+                    document.getElementById('baselineHemoglobin').value = data.baselineHemoglobin;
+                }
+                
+                // Atualizar resumo
+                updateTransfusionSummary(data);
+            }
+        }
+
+        // Atualizar resumo de transfusão
+        function updateTransfusionSummary(data) {
+            const summaryEl = document.getElementById('transfusionSummary');
+            
+            if (!data || !data.acceptsTransfusion) {
+                summaryEl.innerHTML = '<p style="color: #999; font-style: italic;">Preencha o formulário acima para ver o resumo das informações.</p>';
+                return;
+            }
+            
+            let html = '';
+            
+            // Aceita transfusões
+            html += '<p style="margin-bottom: 12px;"><strong>Aceita transfusões:</strong> ';
+            if (data.acceptsTransfusion === 'sim') {
+                html += '<span style="color: #059669;">✓ Sim</span>';
+            } else {
+                html += '<span style="color: #dc2626;">✗ Não</span>';
+            }
+            html += '</p>';
+            
+            // Data da última transfusão (vem do sistema hospitalar)
+            if (data.lastTransfusionDate) {
+                const date = new Date(data.lastTransfusionDate);
+                const dateStr = date.toLocaleDateString('pt-PT', {day: '2-digit', month: 'long', year: 'numeric'});
+                html += '<p style="margin-bottom: 12px;"><strong>Última transfusão:</strong> ' + dateStr + '</p>';
+            }
+            
+            // Reação transfusional
+            html += '<p style="margin-bottom: 12px;"><strong>História de reação:</strong> ';
+            if (data.hasReaction === 'sim') {
+                html += '<span style="color: #d97706;">⚠️ Sim</span>';
+                if (data.reactionDetails) {
+                    html += '<br><span style="color: #666; font-size: 14px; margin-left: 20px;">' + data.reactionDetails + '</span>';
+                }
+            } else if (data.hasReaction === 'nao') {
+                html += '<span style="color: #059669;">✓ Não</span>';
+            } else {
+                html += '<span style="color: #999;">Não especificado</span>';
+            }
+            html += '</p>';
+            
+            // Medicação pré-transfusão
+            html += '<p style="margin-bottom: 12px;"><strong>Medicação pré-transfusão:</strong> ';
+            if (data.needsPreMedication === 'sim') {
+                html += '<span style="color: #0284c7;">Sim</span>';
+                if (data.preMedicationDetails) {
+                    html += '<br><span style="color: #666; font-size: 14px; margin-left: 20px;">' + data.preMedicationDetails + '</span>';
+                }
+            } else if (data.needsPreMedication === 'nao') {
+                html += '<span style="color: #666;">Não</span>';
+            } else {
+                html += '<span style="color: #999;">Não especificado</span>';
+            }
+            html += '</p>';
+            
+            // Hemoglobina basal
+            if (data.baselineHemoglobin) {
+                let hbColor = '#059669';
+                let hbNote = '';
+                if (data.baselineHemoglobin < 7) {
+                    hbColor = '#dc2626';
+                    hbNote = ' (Muito baixa)';
+                } else if (data.baselineHemoglobin < 9) {
+                    hbColor = '#d97706';
+                    hbNote = ' (Baixa)';
+                }
+                html += '<p style="margin-bottom: 12px;"><strong>Hemoglobina basal:</strong> ';
+                html += '<span style="color: ' + hbColor + '; font-weight: 600;">' + data.baselineHemoglobin + ' g/dL' + hbNote + '</span></p>';
+            }
+            
+            summaryEl.innerHTML = html;
+        }
+
+        // Guardar outras doenças
+        function saveOtherDiseases() {
+            if (!currentUser) return;
+            
+            const otherDiseases = document.getElementById('otherDiseases').value.trim();
+            
+            const patients = JSON.parse(localStorage.getItem('patients') || '[]');
+            const index = patients.findIndex(p => p.email === currentUser.email);
+            
+            if (index !== -1) {
+                patients[index].otherDiseases = otherDiseases;
+                patients[index].lastUpdate = new Date().toISOString();
+                localStorage.setItem('patients', JSON.stringify(patients));
+                console.log('✓ Outras doenças guardadas');
+                
+                // Mostrar mensagem de sucesso
+                const successMsg = document.getElementById('otherDiseasesSavedMessage');
+                successMsg.style.display = 'block';
+                setTimeout(() => {
+                    successMsg.style.display = 'none';
+                }, 3000);
+            }
+        }
+
+        // Carregar outras doenças
+        function loadOtherDiseases() {
+            if (!currentUser) return;
+            
+            const patients = JSON.parse(localStorage.getItem('patients') || '[]');
+            const patient = patients.find(p => p.email === currentUser.email);
+            
+            if (patient && patient.otherDiseases) {
+                document.getElementById('otherDiseases').value = patient.otherDiseases;
+            }
+        }
+
+        // Guardar alergias medicamentosas
+        function saveMedicationAllergies() {
+            if (!currentUser) return;
+            
+            const allergies = document.getElementById('medicationAllergies').value.trim();
+            
+            const patients = JSON.parse(localStorage.getItem('patients') || '[]');
+            const index = patients.findIndex(p => p.email === currentUser.email);
+            
+            if (index !== -1) {
+                patients[index].medicationAllergies = allergies;
+                patients[index].lastUpdate = new Date().toISOString();
+                localStorage.setItem('patients', JSON.stringify(patients));
+                console.log('✓ Alergias medicamentosas guardadas');
+                
+                // Mostrar mensagem de sucesso
+                const successMsg = document.getElementById('allergiesSavedMessage');
+                successMsg.style.display = 'block';
+                setTimeout(() => {
+                    successMsg.style.display = 'none';
+                }, 3000);
+            }
+        }
+
+        // Carregar alergias medicamentosas
+        function loadMedicationAllergies() {
+            if (!currentUser) return;
+            
+            const patients = JSON.parse(localStorage.getItem('patients') || '[]');
+            const patient = patients.find(p => p.email === currentUser.email);
+            
+            if (patient && patient.medicationAllergies) {
+                document.getElementById('medicationAllergies').value = patient.medicationAllergies;
+            }
+        }
+
+        // Configuração de medicação SOS
+        const sosConfig = {
+            paracetamol: {
+                interval: 8, // horas
+                maxDaily: 4,
+                name: 'Paracetamol 1g'
+            },
+            ibuprofeno: {
+                interval: 8,
+                maxDaily: 3,
+                name: 'Ibuprofeno 400mg'
+            },
+            metamizol: {
+                interval: 6,
+                maxDaily: 4,
+                name: 'Metamizol 575mg'
+            }
+        };
+
+        function showLogin() {
+            document.getElementById('loginScreen').classList.remove('hidden');
+            document.getElementById('registerScreen').classList.add('hidden');
+            document.getElementById('appScreen').style.display = 'none';
+            document.getElementById('loginScreen').style.display = 'block';
+        }
+
+        function showRegister() {
+            document.getElementById('loginScreen').classList.add('hidden');
+            document.getElementById('registerScreen').classList.remove('hidden');
+            document.getElementById('appScreen').style.display = 'none';
+            document.getElementById('loginScreen').style.display = 'none';
+            document.getElementById('registerScreen').style.display = 'block';
+        }
+
+        function showApp() {
+            document.getElementById('loginScreen').style.display = 'none';
+            document.getElementById('registerScreen').style.display = 'none';
+            document.getElementById('appScreen').style.display = 'block';
+        }
+
+        function showError(elementId, message) {
+            const errorEl = document.getElementById(elementId);
+            errorEl.textContent = message;
+            errorEl.style.display = 'block';
+            setTimeout(() => errorEl.style.display = 'none', 5000);
+        }
+
+        function showSuccess(elementId) {
+            const successEl = document.getElementById(elementId);
+            successEl.style.display = 'block';
+            setTimeout(() => successEl.style.display = 'none', 3000);
+        }
+
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const email = document.getElementById('loginEmail').value.trim();
+            const password = document.getElementById('loginPassword').value;
+            
+            if (!email || !password) {
+                showError('loginError', 'Por favor preencha todos os campos');
+                return;
+            }
+            
+            const user = users.find(u => u.email === email && u.password === password);
+            
+            if (user) {
+                currentUser = user;
+                loadPatientData(); // Carregar dados clínicos
+                
+                // Resetar displays de medicação
+                medicationStatus = {};
+                
+                // Resetar status visual das medicações
+                const medElements = ['hydroxyMorning', 'hydroxyEvening', 'folic'];
+                medElements.forEach(medId => {
+                    const statusEl = document.getElementById(medId + 'Status');
+                    if (statusEl) {
+                        statusEl.textContent = '⏳ Pendente';
+                        statusEl.className = 'status-text';
+                    }
+                    // Resetar botões
+                    const buttons = document.querySelectorAll(`[onclick*="${medId}"]`);
+                    buttons.forEach(btn => btn.classList.remove('active'));
+                });
+                
+                // Restaurar medicações do dia de hoje se existirem
+                if (patientData.medications && patientData.medications.length > 0) {
+                    const today = new Date().toDateString();
+                    const todayMeds = patientData.medications.filter(m => {
+                        return new Date(m.date).toDateString() === today;
+                    });
+                    
+                    todayMeds.forEach(m => {
+                        medicationStatus[m.medication] = m.taken;
+                        const statusEl = document.getElementById(m.medication + 'Status');
+                        if (statusEl && m.taken) {
+                            const time = m.time || new Date(m.date).toLocaleTimeString('pt-PT', {hour: '2-digit', minute: '2-digit'});
+                            statusEl.textContent = `✓ Tomado às ${time}`;
+                            statusEl.className = 'status-text taken';
+                        } else if (statusEl && !m.taken) {
+                            statusEl.textContent = '✗ Não tomado';
+                            statusEl.className = 'status-text not-taken';
+                        }
+                    });
+                }
+                
+                // Atualizar displays de analgésicos SOS
+                updateSOSDisplay('paracetamol');
+                updateSOSDisplay('ibuprofeno');
+                updateSOSDisplay('metamizol');
+                
+                document.getElementById('userName').textContent = user.name.split(' ')[0];
+                document.getElementById('profileName').textContent = user.name;
+                document.getElementById('profileEmail').textContent = user.email;
+                document.getElementById('profilePhone').textContent = user.phone || 'Não disponível';
+                document.getElementById('loginForm').reset();
+                showApp();
+            } else {
+                showError('loginError', 'Email ou password incorretos');
+            }
+        });
+
+        document.getElementById('registerForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const name = document.getElementById('registerName').value.trim();
+            const birthDate = document.getElementById('registerBirthDate').value;
+            const gender = document.getElementById('registerGender').value;
+            const phone = document.getElementById('registerPhone').value.trim();
+            const email = document.getElementById('registerEmail').value.trim();
+            const password = document.getElementById('registerPassword').value;
+            const passwordConfirm = document.getElementById('registerPasswordConfirm').value;
+            
+            if (!name || !birthDate || !gender || !email || !password || !passwordConfirm) {
+                showError('registerError', 'Por favor preencha todos os campos obrigatórios');
+                return;
+            }
+            
+            if (password.length < 6) {
+                showError('registerError', 'A password deve ter pelo menos 6 caracteres');
+                return;
+            }
+            
+            if (password !== passwordConfirm) {
+                showError('registerError', 'As passwords não coincidem');
+                return;
+            }
+            
+            if (users.find(u => u.email === email)) {
+                showError('registerError', 'Este email já está registado');
+                return;
+            }
+            
+            const newUser = { 
+                name, 
+                email,
+                birthDate,
+                gender,
+                phone,
+                password,
+                registrationDate: new Date().toISOString(),
+                clinicalData: {
+                    symptoms: [],
+                    medications: [],
+                    sosMeds: { paracetamol: [], ibuprofeno: [], metamizol: [] },
+                    appointments: [],
+                    emergencies: [],
+                    labResults: []
+                },
+                lastUpdate: new Date().toISOString()
+            };
+            
+            users.push(newUser);
+            
+            // Guardar no localStorage para sincronização com app profissional
+            let patients = JSON.parse(localStorage.getItem('patients') || '[]');
+            patients.push(newUser);
+            localStorage.setItem('patients', JSON.stringify(patients));
+            console.log('✓ Doente guardado no localStorage:', newUser.name);
+            
+            currentUser = newUser;
+            loadPatientData(); // Carregar estrutura de dados
+            
+            // Resetar displays de medicação para novo doente
+            medicationStatus = {};
+            
+            // Resetar status visual das medicações
+            const medElements = ['hydroxyMorning', 'hydroxyEvening', 'folic'];
+            medElements.forEach(medId => {
+                const statusEl = document.getElementById(medId + 'Status');
+                if (statusEl) {
+                    statusEl.textContent = '⏳ Pendente';
+                    statusEl.className = 'status-text';
+                }
+                // Resetar botões
+                const buttons = document.querySelectorAll(`[onclick*="${medId}"]`);
+                buttons.forEach(btn => btn.classList.remove('active'));
+            });
+            
+            // Resetar displays de analgésicos SOS
+            updateSOSDisplay('paracetamol');
+            updateSOSDisplay('ibuprofeno');
+            updateSOSDisplay('metamizol');
+            
+            document.getElementById('userName').textContent = name.split(' ')[0];
+            document.getElementById('profileName').textContent = name;
+            document.getElementById('profileEmail').textContent = email;
+            document.getElementById('profilePhone').textContent = phone || 'Não disponível';
+            document.getElementById('registerForm').reset();
+            showApp();
+        });
+
+        function logout() {
+            if (confirm('Tem a certeza que pretende sair?')) {
+                currentUser = null;
+                medicationStatus = {};
+                showLogin();
+            }
+        }
+
+        function switchTab(tabName) {
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+            document.getElementById(tabName + 'Tab').classList.add('active');
+            event.currentTarget.classList.add('active');
+            
+            // Carregar dados de transfusão quando aceder ao separador
+            if (tabName === 'transfusoes') {
+                loadTransfusionData();
+            }
+            
+            // Carregar outras doenças quando aceder ao perfil
+            if (tabName === 'perfil') {
+                loadOtherDiseases();
+            }
+            
+            // Carregar alergias medicamentosas quando aceder à medicação
+            if (tabName === 'medicacao') {
+                loadMedicationAllergies();
+            }
+        }
+
+        function toggleFaq(element) {
+            const content = element.querySelector('.faq-content');
+            content.classList.toggle('show');
+        }
+
+        function toggleSymptomFields() {
+            const type = document.getElementById('symptomType').value;
+            ['dorFields', 'febreFields', 'cansacoFields', 'respiracaoFields'].forEach(id => {
+                document.getElementById(id).style.display = 'none';
+            });
+            document.getElementById(type + 'Fields').style.display = 'block';
+        }
+
+        function saveSymptom() {
+            const type = document.getElementById('symptomType').value;
+            const now = new Date();
+            
+            let symptomData = {
+                type: type,
+                date: now.toISOString(),
+                timestamp: now.getTime()
+            };
+            
+            // Adicionar campos específicos do tipo
+            if (type === 'dor') {
+                symptomData.intensity = document.getElementById('painLevel')?.value || 5;
+                symptomData.location = document.getElementById('painLocation')?.value || 'Não especificado';
+            } else if (type === 'febre') {
+                symptomData.temperature = document.getElementById('temperature')?.value || 38;
+            } else if (type === 'cansaco') {
+                symptomData.level = document.getElementById('fatigueLevel')?.value || 'Moderado';
+            } else if (type === 'respiracao') {
+                symptomData.difficulty = document.getElementById('breathingLevel')?.value || 'Moderada';
+            }
+            
+            // Notas opcionais
+            const notes = document.getElementById('symptomNotes')?.value;
+            if (notes) symptomData.notes = notes;
+            
+            patientData.symptoms.push(symptomData);
+            savePatientData();
+            
+            console.log('✓ Sintoma guardado:', symptomData);
+            
+            // Atualizar histórico visual
+            renderSymptomHistory();
+            
+            // Limpar formulário
+            document.getElementById('symptomNotes').value = '';
+            
+            showSuccess('symptomSuccess');
+        }
+        
+        function renderSymptomHistory() {
+            const historyEl = document.getElementById('symptomHistory');
+            
+            if (patientData.symptoms.length === 0) {
+                historyEl.innerHTML = '<p style="color: #999; text-align: center; padding: 40px;">Nenhum sintoma registado ainda</p>';
+                return;
+            }
+            
+            // Ordenar por data (mais recentes primeiro)
+            const sorted = patientData.symptoms.slice().sort((a, b) => b.timestamp - a.timestamp);
+            
+            let html = '';
+            sorted.slice(0, 10).forEach(s => {
+                const date = new Date(s.date);
+                const now = new Date();
+                const isToday = date.toDateString() === now.toDateString();
+                const yesterday = new Date(now);
+                yesterday.setDate(yesterday.getDate() - 1);
+                const isYesterday = date.toDateString() === yesterday.toDateString();
+                
+                let dateStr;
+                if (isToday) {
+                    dateStr = 'Hoje, ' + date.toLocaleTimeString('pt-PT', {hour: '2-digit', minute: '2-digit'});
+                } else if (isYesterday) {
+                    dateStr = 'Ontem, ' + date.toLocaleTimeString('pt-PT', {hour: '2-digit', minute: '2-digit'});
+                } else {
+                    dateStr = date.toLocaleDateString('pt-PT', {day: '2-digit', month: 'short'}) + ', ' + 
+                              date.toLocaleTimeString('pt-PT', {hour: '2-digit', minute: '2-digit'});
+                }
+                
+                const typeNames = {
+                    dor: 'DOR',
+                    febre: 'FEBRE',
+                    cansaco: 'CANSAÇO',
+                    respiracao: 'RESPIRAÇÃO'
+                };
+                
+                let details = '';
+                let indicator = '';
+                
+                if (s.type === 'dor') {
+                    details = s.location || 'Não especificado';
+                    const level = parseInt(s.intensity);
+                    const levelClass = level >= 7 ? 'level-high' : level >= 4 ? 'level-medium' : 'level-low';
+                    indicator = '<div class="symptom-indicator ' + levelClass + '">' + s.intensity + '</div>';
+                } else if (s.type === 'febre') {
+                    details = s.temperature + '°C';
+                    indicator = '<div class="symptom-indicator level-fever">🌡️</div>';
+                } else if (s.type === 'cansaco') {
+                    details = s.level || 'Moderado';
+                    indicator = '<div class="symptom-indicator level-fatigue">😴</div>';
+                } else if (s.type === 'respiracao') {
+                    details = s.difficulty || 'Moderada';
+                    indicator = '<div class="symptom-indicator level-breathing">🫁</div>';
+                }
+                
+                html += '<div class="symptom-card">';
+                html += '<div style="display: flex; justify-content: space-between; align-items: center;">';
+                html += '<div>';
+                html += '<strong>' + dateStr + ' - ' + typeNames[s.type] + '</strong>';
+                html += '<p style="color: #666; font-size: 14px; margin-top: 5px;">' + details + '</p>';
+                if (s.notes) {
+                    html += '<p style="color: #999; font-size: 13px; margin-top: 3px; font-style: italic;">' + s.notes + '</p>';
+                }
+                html += '</div>';
+                html += indicator;
+                html += '</div></div>';
+            });
+            
+            historyEl.innerHTML = html;
+        }
+
+        function toggleEdit(id) {
+            const editDiv = document.getElementById(id);
+            editDiv.classList.toggle('show');
+        }
+
+        function saveDose() {
+            const newDose = document.getElementById('hydroxyDoseSelect').value;
+            document.getElementById('hydroxyDose').textContent = newDose;
+            document.getElementById('hydroxyEdit').classList.remove('show');
+            showSuccess('medicationSuccess');
+        }
+
+        function markMed(medId, taken) {
+            medicationStatus[medId] = taken;
+            const statusEl = document.getElementById(medId + 'Status');
+            const buttons = event.currentTarget.parentElement.querySelectorAll('button');
+            
+            buttons.forEach(btn => btn.classList.remove('active'));
+            event.currentTarget.classList.add('active');
+            
+            const now = new Date();
+            
+            if (taken) {
+                const time = now.toLocaleTimeString('pt-PT', {hour: '2-digit', minute: '2-digit'});
+                statusEl.textContent = `✓ Tomado às ${time}`;
+                statusEl.className = 'status-text taken';
+                
+                // Guardar no histórico
+                patientData.medications.push({
+                    medication: medId,
+                    taken: true,
+                    date: now.toISOString(),
+                    time: time,
+                    timestamp: now.getTime()
+                });
+                
+                savePatientData();
+                console.log('✓ Medicação registada:', medId);
+            } else {
+                statusEl.textContent = '✗ Não tomado';
+                statusEl.className = 'status-text not-taken';
+                
+                // Guardar como não tomado
+                patientData.medications.push({
+                    medication: medId,
+                    taken: false,
+                    date: now.toISOString(),
+                    timestamp: now.getTime()
+                });
+                
+                savePatientData();
+            }
+        }
+
+        function registerSOSMed(medType) {
+            const config = sosConfig[medType];
+            const now = new Date();
+            
+            // Verificar se já atingiu o máximo diário
+            const todayDoses = sosMedication[medType].filter(dose => {
+                const doseDate = new Date(dose);
+                return doseDate.toDateString() === now.toDateString();
+            });
+
+            if (todayDoses.length >= config.maxDaily) {
+                alert(`⚠️ Atenção!\n\nJá atingiu o máximo de ${config.maxDaily} tomas de ${config.name} por dia.\n\nSe a dor continua, contacte o seu médico ou vá ao serviço de urgência.`);
+                return;
+            }
+
+            // Verificar intervalo mínimo
+            if (todayDoses.length > 0) {
+                const lastDose = new Date(todayDoses[todayDoses.length - 1]);
+                const hoursSinceLastDose = (now - lastDose) / (1000 * 60 * 60);
+                
+                if (hoursSinceLastDose < config.interval) {
+                    const hoursRemaining = Math.ceil(config.interval - hoursSinceLastDose);
+                    const minutesRemaining = Math.ceil((config.interval - hoursSinceLastDose) * 60);
+                    
+                    alert(`⚠️ Intervalo insuficiente!\n\nDeve esperar pelo menos ${config.interval} horas entre tomas.\n\nÚltima toma foi há ${Math.floor(hoursSinceLastDose)} horas.\n\nPode tomar daqui a ${hoursRemaining}h (aprox. ${minutesRemaining} minutos).`);
+                    return;
+                }
+            }
+
+            // Registar a toma
+            sosMedication[medType].push(now.toISOString());
+            patientData.sosMeds[medType].push({
+                date: now.toISOString(),
+                timestamp: now.getTime(),
+                medication: config.name
+            });
+            
+            savePatientData();
+            console.log('✓ Analgésico SOS registado:', config.name);
+            
+            updateSOSDisplay(medType);
+            showSuccess('medicationSuccess');
+        }
+
+        function updateSOSDisplay(medType) {
+            const listEl = document.getElementById(medType + 'List');
+            const config = sosConfig[medType];
+            const now = new Date();
+            
+            const todayDoses = sosMedication[medType].filter(dose => {
+                const doseDate = new Date(dose);
+                return doseDate.toDateString() === now.toDateString();
+            });
+
+            if (todayDoses.length === 0) {
+                listEl.innerHTML = '<p style="color: #999; font-style: italic;">Nenhuma toma registada hoje</p>';
+                return;
+            }
+
+            let html = '';
+            todayDoses.forEach((dose, index) => {
+                const doseTime = new Date(dose);
+                const timeStr = doseTime.toLocaleTimeString('pt-PT', {hour: '2-digit', minute: '2-digit'});
+                html += `<p style="margin-bottom: 5px;">✓ Toma ${index + 1}: ${timeStr}</p>`;
+            });
+
+            const remaining = config.maxDaily - todayDoses.length;
+            if (remaining > 0) {
+                html += `<p style="margin-top: 10px; color: #667eea; font-weight: 600;">Pode tomar mais ${remaining} ${remaining === 1 ? 'vez' : 'vezes'} hoje</p>`;
+            } else {
+                html += `<p style="margin-top: 10px; color: #dc2626; font-weight: 600;">⚠️ Máximo diário atingido</p>`;
+            }
+
+            listEl.innerHTML = html;
+        }
+    </script>
+</body>
+</html>
